@@ -1042,8 +1042,8 @@ static const struct command_registration ublast_command_handlers[] = {
 		.name = "usb_blaster_vid_pid",
 		.handler = ublast_handle_vid_pid_command,
 		.mode = COMMAND_CONFIG,
-		.help = "the vendor ID and product ID of the USB-Blaster and " \
-			"vendor ID and product ID of the uninitialized device " \
+		.help = "the vendor ID and product ID of the USB-Blaster and "
+			"vendor ID and product ID of the uninitialized device "
 			"for USB-Blaster II",
 		.usage = "vid pid vid_uninit pid_uninit",
 	},
@@ -1071,13 +1071,18 @@ static const struct command_registration ublast_command_handlers[] = {
 	COMMAND_REGISTRATION_DONE
 };
 
-struct jtag_interface usb_blaster_interface = {
+static struct jtag_interface usb_blaster_interface = {
+	.supported = DEBUG_CAP_TMS_SEQ,
+	.execute_queue = ublast_execute_queue,
+};
+
+struct adapter_driver usb_blaster_adapter_driver = {
 	.name = "usb_blaster",
 	.transports = jtag_only,
 	.commands = ublast_command_handlers,
-	.supported = DEBUG_CAP_TMS_SEQ,
 
-	.execute_queue = ublast_execute_queue,
 	.init = ublast_init,
 	.quit = ublast_quit,
+
+	.jtag_ops = &usb_blaster_interface,
 };
